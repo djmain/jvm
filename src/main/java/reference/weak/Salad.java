@@ -9,9 +9,9 @@ public class Salad extends WeakReference<Apple>
 {
     private Object value ;
 
-    public Salad(Apple referent, Object value)
+    public Salad(Apple apple, Object value)
     {
-        super(referent);
+        super(apple);
         this.value = value;
     }
 
