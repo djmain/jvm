@@ -1,5 +1,6 @@
+
+import com.sun.crypto.provider.AESKeyGenerator;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
 import reference.weak.Apple;
 import reference.weak.Salad;
 
@@ -28,17 +29,17 @@ public class TestJvm
     }
 
     @Test
-public void testWeakHashMap() throws Exception
-{
-    WeakHashMap<Object, String> map = new WeakHashMap();
-    Object o = new Object();
-    String value = new String("aa");
-    map.put(o, value);
-    assertFalse(map.isEmpty());
-    o = null;
-    System.gc();
-    assertTrue(map.isEmpty()); ////测试结果有时正常，有时异常
-}
+    public void testWeakHashMap() throws Exception
+    {
+        WeakHashMap<Object, String> map = new WeakHashMap();
+        Object o = new Object();
+        String value = new String("aa");
+        map.put(o, value);
+        assertFalse(map.isEmpty());
+        o = null;
+        System.gc();
+        assertTrue(map.isEmpty()); ////测试结果有时正常，有时异常
+    }
 
     @Test
     public void testWeakHashMap01() throws Exception
@@ -48,7 +49,7 @@ public void testWeakHashMap() throws Exception
         {
             map.put(new String("字符串" + i), new String("串串" + i));
         }
-        assertEquals(map.size(),    5);
+        assertEquals(map.size(), 5);
         System.gc();
         assertEquals(map.size(), 0); //测试结果有时正常，有时异常
     }
@@ -64,5 +65,41 @@ public void testWeakHashMap() throws Exception
         map.size();
         System.gc();
         assertTrue(map.isEmpty()); //测试结果有时正常，有时异常
+    }
+
+
+    /**
+     * 类加载测试
+     * sun.misc.Launcher$ExtClassLoader@38af3868
+     * sun.misc.Launcher$AppClassLoader@18b4aac2
+     * sun.misc.Launcher$ExtClassLoader@38af3868
+     */
+    @Test
+    public void testClassLoader()
+    {
+        /**
+         * Bootstrap ClassLoader
+         */
+        ClassLoader classLoader = Object.class.getClassLoader();
+        assertNull(classLoader);
+        /**
+         * Extension ClassLoader，由sun.misc.Launcher$ExtClassLoader实现
+         * ExtClassLoader加载ext/*下面的class, 如sun*.jar（例如:sunjce_provider.jar）
+         */
+        classLoader = AESKeyGenerator.class.getClassLoader();
+        System.out.println(classLoader);
+
+        //Extension ClassLoader的parent是Bootstrap ClassLoader
+        classLoader = AESKeyGenerator.class.getClassLoader().getParent();
+        assertNull(classLoader);
+
+
+        //Application ClassLoader, 由sun.misc.Launcher$AppClassLoader实现
+        classLoader = TestJvm.class.getClassLoader();
+        System.out.println(classLoader);
+
+        //Application ClassLoader的parent是Extension ClassLoader
+        classLoader = TestJvm.class.getClassLoader().getParent();
+        System.out.println(classLoader);
     }
 }
