@@ -1,4 +1,5 @@
 import org.junit.Test;
+import org.springframework.context.ApplicationContext;
 import reference.weak.Apple;
 import reference.weak.Salad;
 
@@ -29,7 +30,7 @@ public class TestJvm
     @Test
 public void testWeakHashMap() throws Exception
 {
-    WeakHashMap<Object, String> map = new WeakHashMap<>();
+    WeakHashMap<Object, String> map = new WeakHashMap();
     Object o = new Object();
     String value = new String("aa");
     map.put(o, value);
@@ -47,14 +48,14 @@ public void testWeakHashMap() throws Exception
         {
             map.put(new String("字符串" + i), new String("串串" + i));
         }
-        assertEquals(map.size(), 5);
+        assertEquals(map.size(),    5);
         System.gc();
         assertEquals(map.size(), 0); //测试结果有时正常，有时异常
     }
 
     public static void main(String[] args)
     {
-        WeakHashMap<Object, String> map = new WeakHashMap<>();
+        WeakHashMap<Object, String> map = new WeakHashMap();
         Object o = new Object();
         String value = new String("aa");
         map.put(o, value);

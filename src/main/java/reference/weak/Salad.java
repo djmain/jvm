@@ -13,6 +13,7 @@ public class Salad extends WeakReference<Apple>
     {
         super(apple);
         this.value = value;
+        System.gc();
     }
 
 
