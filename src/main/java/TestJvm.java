@@ -56,15 +56,20 @@ public class TestJvm
 
     public static void main(String[] args)
     {
-        WeakHashMap<Object, String> map = new WeakHashMap();
-        Object o = new Object();
-        String value = new String("aa");
-        map.put(o, value);
-        assertFalse(map.isEmpty());
-        o = null;
-        map.size();
-        System.gc();
-        assertTrue(map.isEmpty()); //测试结果有时正常，有时异常
+//        WeakHashMap<Object, String> map = new WeakHashMap();
+//        Object o = new Object();
+//        String value = new String("aa");
+//        map.put(o, value);
+//        assertFalse(map.isEmpty());
+//        o = null;
+//        map.size();
+//        System.gc();
+//        assertTrue(map.isEmpty()); //测试结果有时正常，有时异常
+        System.out.println("first");
+        new TestJvm();
+        System.out.println("second");
+        new TestJvm();
+        System.out.println("end");
     }
 
 
@@ -77,29 +82,57 @@ public class TestJvm
     @Test
     public void testClassLoader()
     {
+//        /**
+//         * Bootstrap ClassLoader
+//         */
+//        ClassLoader classLoader = Object.class.getClassLoader();
+//        assertNull(classLoader);
+//        /**
+//         * Extension ClassLoader，由sun.misc.Launcher$ExtClassLoader实现
+//         * ExtClassLoader加载ext/*下面的class, 如sun*.jar（例如:sunjce_provider.jar）
+//         */
+//        classLoader = AESKeyGenerator.class.getClassLoader();
+//        System.out.println(classLoader);
+//
+//        //Extension ClassLoader的parent是Bootstrap ClassLoader
+//        classLoader = AESKeyGenerator.class.getClassLoader().getParent();
+//        assertNull(classLoader);
+//
+//
+//        //Application ClassLoader, 由sun.misc.Launcher$AppClassLoader实现
+//        classLoader = TestJvm.class.getClassLoader();
+//        System.out.println(classLoader);
+//
+//        //Application ClassLoader的parent是Extension ClassLoader
+//        classLoader = TestJvm.class.getClassLoader().getParent();
+//        System.out.println(classLoader);
+    }
+
+
+    static
+    {
+        System.out.println("static block");
+    }
+
+    {
+        System.out.println("normal block");
+    }
+
+    public TestJvm()
+    {
+        System.out.println("creating a new instance of TestJVM");
+    }
+
+
+    @Test
+    public void testClassInit()
+    {
         /**
-         * Bootstrap ClassLoader
+         * 测试之前，已经生成了一个实例
          */
-        ClassLoader classLoader = Object.class.getClassLoader();
-        assertNull(classLoader);
-        /**
-         * Extension ClassLoader，由sun.misc.Launcher$ExtClassLoader实现
-         * ExtClassLoader加载ext/*下面的class, 如sun*.jar（例如:sunjce_provider.jar）
-         */
-        classLoader = AESKeyGenerator.class.getClassLoader();
-        System.out.println(classLoader);
-
-        //Extension ClassLoader的parent是Bootstrap ClassLoader
-        classLoader = AESKeyGenerator.class.getClassLoader().getParent();
-        assertNull(classLoader);
-
-
-        //Application ClassLoader, 由sun.misc.Launcher$AppClassLoader实现
-        classLoader = TestJvm.class.getClassLoader();
-        System.out.println(classLoader);
-
-        //Application ClassLoader的parent是Extension ClassLoader
-        classLoader = TestJvm.class.getClassLoader().getParent();
-        System.out.println(classLoader);
+        System.out.println("first");
+        new TestJvm();
+        System.out.println("second");
+        new TestJvm();
     }
 }
