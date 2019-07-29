@@ -15,9 +15,6 @@ public class Salad extends WeakReference<Apple>
         this.value = value;
         System.gc();
     }
-
-
-
     public Object getValue()
     {
         return value;
@@ -28,7 +25,8 @@ public class Salad extends WeakReference<Apple>
         this.value = value;
     }
 
-    public Salad(Apple apple) {
+    public Salad(Apple apple)
+    {
         super(apple);
     }
 }
